@@ -12,20 +12,20 @@ import { localStorageMock } from "../__mocks__/localStorage.js"
 import { ROUTES_PATH } from "../constants/routes.js"
 
 
-let newBill;     // new NewBill (containers)
+let newBill;
 
 const setMockFileToFileInput = async () => {       // => simule le téléchargement d'un justif et retourne les données
   const fileInput = screen.getByTestId("file");
-  const handleChangeFile = jest.fn(newBill.handleChangeFile);     // méthode qui récup les données du dernier justif puis envoie au serveur
+  const handleChangeFile = jest.fn(newBill.handleChangeFile);
   fileInput.addEventListener("change", handleChangeFile);
   await waitFor(() => {
-    fireEvent.change(fileInput, {                                 // firEvent équivaut à userEvent (+ rapide mais - fonctionnel)
+    fireEvent.change(fileInput, {
       target: {
-        files: [new File(["test"], "test.png", { type: "image/png" })],  // créé un nouveau justif (name: "test.png", type: "image/png")
+        files: [new File(["test"], "test.png", { type: "image/png" })],
       },
     });
   });
-  return { fileInput, handleChangeFile }                          // retourne l'input et les données
+  return { fileInput, handleChangeFile }
 };
 
 const initBillPage = async () => {                 // => lance la page newBill avec données mockées
@@ -64,21 +64,18 @@ beforeAll(() => {
 describe("When I am on NewBill Page", () => {
 
   describe("When I select a proof with the file input", () => {
-    test("Then, proof should be send to mock API POST", async () => {               // vérifie que le justif soit bien téléchargé vers les données mockées
+    test("Then, proof should be send to mock API POST", async () => {               // vérifie que le justif soit bien téléchargé
       const { handleChangeFile, fileInput } = await setMockFileToFileInput();
 
       expect(handleChangeFile).toHaveBeenCalled();
-      expect(fileInput.files[0].type).toBe("image/png");                            // vérif du dernier file.type soumis
-      expect(fileInput.files[0].name).toBe("test.png");                             // vérif du dernier file.name soumis
+      expect(fileInput.files[0].type).toBe("image/png");
+      expect(fileInput.files[0].name).toBe("test.png");
     })
   })
 
   describe("When I submit the form", () => {
-    test("Then, datas should be send to mock API POST", async () => {
+    test("Then, datas should be send to mock API POST", async () => {               // vérifie que le formulaire soit bien envoyé
       const handleSubmit = jest.fn(newBill.handleSubmit);
-      // const newBillForm = screen.getByTestId("form-new-bill");
-      // newBillForm.addEventListener('submit', handleSubmit);
-      // userEvent.submit(newBillForm);
       const submitBtn = screen.getByTestId('btn-send-bill');
       submitBtn.addEventListener('click', handleSubmit);
       userEvent.click(submitBtn);
