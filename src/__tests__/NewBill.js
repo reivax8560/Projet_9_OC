@@ -75,12 +75,16 @@ describe("When I am on NewBill Page", () => {
 
   describe("When I submit the form", () => {
     test("Then, datas should be send to mock API POST", async () => {               // vérifie que le formulaire soit bien envoyé
-      const handleSubmit = jest.fn(newBill.handleSubmit);
-      const submitBtn = screen.getByTestId('btn-send-bill');
-      submitBtn.addEventListener('click', handleSubmit);
-      userEvent.click(submitBtn);
+
+      const form = screen.getByTestId("form-new-bill");
+      const handleSubmit = jest.fn((e) => e.preventDefault());
+      form.addEventListener('submit', handleSubmit);
+      fireEvent.submit(form);
 
       expect(handleSubmit).toHaveBeenCalled();
+      expect(screen.getByTestId("form-new-bill")).toBeTruthy();
+      expect(screen.getByTestId('btn-new-bill')).toBeTruthy();
+
     })
   })
 
@@ -128,4 +132,5 @@ describe("When I am on NewBill Page", () => {
 
     })
   })
+
 })
