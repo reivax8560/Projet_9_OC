@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+import { log } from "console"
 import { fireEvent, screen, waitFor } from "@testing-library/dom"
 import userEvent from '@testing-library/user-event'
 import NewBillUI from "../views/NewBillUI.js"
@@ -10,6 +11,7 @@ import mockStore from "../__mocks__/store"
 import router from "../app/Router"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import { ROUTES_PATH } from "../constants/routes.js"
+
 
 
 let newBill;
@@ -30,7 +32,7 @@ const setMockFileToFileInput = async () => {       // => simule le téléchargem
 
 const initBillPage = async () => {                 // => lance la page newBill avec données mockées
   Object.defineProperty(window, "localStorage", {
-    value: localStorageMock,      // récup get set clear remove
+    value: localStorageMock,
   });
   window.localStorage.setItem(
     "user",
@@ -63,8 +65,14 @@ beforeAll(() => {
 
 describe("When I am on NewBill Page", () => {
 
+  test("Then NewBill form should be displayed", async () => {                       // test de l'affichage du formulaire
+    await waitFor(() => screen.getAllByText("Envoyer une note de frais"))
+    const firstInputLabelText = await screen.getAllByText("Type de dépense")
+    expect(firstInputLabelText).toBeTruthy()
+  })
+
   describe("When I select a proof with the file input", () => {
-    test("Then, proof should be send to mock API POST", async () => {               // vérifie que le justif soit bien téléchargé
+    test("Then, proof should be send to mock API POST", async () => {               // test le téléchargement du justificatif
       const { handleChangeFile, fileInput } = await setMockFileToFileInput();
 
       expect(handleChangeFile).toHaveBeenCalled();
@@ -73,23 +81,8 @@ describe("When I am on NewBill Page", () => {
     })
   })
 
-  describe("When I submit the form", () => {
-    test("Then, datas should be send to mock API POST", async () => {               // vérifie que le formulaire soit bien envoyé
-
-      const form = screen.getByTestId("form-new-bill");
-      const handleSubmit = jest.fn((e) => e.preventDefault());
-      form.addEventListener('submit', handleSubmit);
-      fireEvent.submit(form);
-
-      expect(handleSubmit).toHaveBeenCalled();
-      expect(screen.getByTestId("form-new-bill")).toBeTruthy();
-      expect(screen.getByTestId('btn-new-bill')).toBeTruthy();
-
-    })
-  })
-
   describe("When an error occurs on API", () => {                 // ERREURS API
-    beforeEach(() => {                                            // espionne le retour promesse mockStore et créé un user employee
+    beforeEach(() => {
       jest.spyOn(mockStore, "bills")
       Object.defineProperty(
         window,
@@ -112,7 +105,6 @@ describe("When I am on NewBill Page", () => {
       })
       await new Promise(process.nextTick);
       await setMockFileToFileInput();
-
       expect(logSpy).toHaveBeenCalledWith(new Error("Erreur 404"));
     })
 

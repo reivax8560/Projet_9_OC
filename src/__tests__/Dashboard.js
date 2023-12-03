@@ -13,7 +13,7 @@ import mockStore from "../__mocks__/store"
 import { bills } from "../fixtures/bills"
 import router from "../app/Router"
 
-jest.mock("../app/Store", () => mockStore)                                                 // 4 bills => 1 pending, 1 accepted, 2 refused
+jest.mock("../app/Store", () => mockStore)
 
 describe('Given I am connected as an Admin', () => {
 
@@ -246,8 +246,8 @@ describe("Given I am a user connected as Admin", () => {
       const root = document.createElement("div")
       root.setAttribute("id", "root")
       document.body.append(root)
-      router()                                                      // aucun pathname de défini donc retourne LoginUI
-      window.onNavigate(ROUTES_PATH.Dashboard)                      // exécute DashboardUI + new Dashboard (avec les fixtures/bills ???)
+      router()
+      window.onNavigate(ROUTES_PATH.Dashboard)
       await waitFor(() => screen.getByText("Validations"))
       const contentPending = await screen.getByText("En attente (1)")
       expect(contentPending).toBeTruthy()
@@ -258,11 +258,11 @@ describe("Given I am a user connected as Admin", () => {
 
     describe("When an error occurs on API", () => {              // QUAND ERREUR API
       beforeEach(() => {
-        jest.spyOn(mockStore, "bills")    // fonction simulée qui surveille les appels à mockStore (promesse)
+        jest.spyOn(mockStore, "bills")
         Object.defineProperty(
           window,
           'localStorage',
-          { value: localStorageMock }     // récupère les méthodes getItem, set, clear, remove
+          { value: localStorageMock }
         )
         window.localStorage.setItem('user', JSON.stringify({
           type: 'Admin',
@@ -275,7 +275,7 @@ describe("Given I am a user connected as Admin", () => {
       })
       test("fetches bills from an API and fails with 404 message error", async () => {                        // test erreur 404 lors du fetch
 
-        mockStore.bills.mockImplementationOnce(() => {                      // simule une seule fois l'appel à mockStore.bills
+        mockStore.bills.mockImplementationOnce(() => {
           return {
             list: () => {
               return Promise.reject(new Error("Erreur 404"))

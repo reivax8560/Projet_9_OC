@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+import { log } from "console"
 import { fireEvent, screen, waitFor } from "@testing-library/dom"
 import userEvent from '@testing-library/user-event'
 import Bills from "../containers/Bills.js";
@@ -17,7 +18,7 @@ jest.mock("../app/Store", () => mockStore)
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
 
-    ///////////////////////////////////////////////////////////////////////////////// ICONE EN SURBRILLANCE
+    ///////////////////////////////////////////////////////////////////////////////// ICONE EN SURBRILLANCE (code initial)
     test("Then bill icon in vertical layout should be highlighted", async () => {
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
@@ -27,15 +28,15 @@ describe("Given I am connected as an employee", () => {
       root.setAttribute("id", "root")
       document.body.append(root)
       router()
-      window.onNavigate(ROUTES_PATH.Bills)                       // lance Bills et BillsUI
+      window.onNavigate(ROUTES_PATH.Bills)
       await waitFor(() => screen.getByTestId('icon-window'))
       const windowIcon = screen.getByTestId('icon-window')
       const iconClass = windowIcon.className
       // to-do write expect expression
-      expect(iconClass).toEqual("active-icon")                    // corrigé
+      expect(iconClass).toEqual("active-icon")                    // ajout de la mention expect
     })
 
-    //////////////////////////////////////////////////////////////////////////// BILLS DU + RECENT AU + ANCIEN
+    //////////////////////////////////////////////////////////////////////////// BILLS DU + RECENT AU + ANCIEN (code initial)
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
@@ -68,7 +69,7 @@ describe("Given I am connected as an employee", () => {
       document.body.innerHTML = BillsUI({ data: bills })
 
       const iconEye = document.querySelector("div[data-bill-url='https://test.storage.tld/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a']")
-      $.fn.modal = jest.fn(); // évite que jest ne reconnaisse pas la méthode modal de bootstrap
+      $.fn.modal = jest.fn();
       const handleClickIconEye = jest.fn(() => billsContainer.handleClickIconEye(iconEye))
       iconEye.addEventListener('click', handleClickIconEye)
       userEvent.click(iconEye)
@@ -115,41 +116,40 @@ describe("Given I am connected as an employee", () => {
       const BillName = await screen.getByText("test2")
       expect(BillName).toBeTruthy()
     })
-    /////////////////////////////////////////////////////////////////////// TEST LOADING
+    /////////////////////////////////////////////////////////////////////// TEST LOADING (idem dashboard)
     describe('When I am on Bills page but it is loading', () => {
       test('Then, Loading page should be rendered', () => {
         document.body.innerHTML = BillsUI({ loading: true })
         expect(screen.getAllByText('Loading...')).toBeTruthy()
       })
     })
-    ///////////////////////////////////////////////////////////////////// TEST ERROR
+    ///////////////////////////////////////////////////////////////////// TEST ERROR (idem dashboard)
     describe('When I am on Bills page but back-end send an error message', () => {
       test('Then, Error page should be rendered', () => {
         document.body.innerHTML = BillsUI({ error: 'some error message' })
         expect(screen.getAllByText('Erreur')).toBeTruthy()
       })
     })
-    //////////////////////////////////////////////////////////////////////////// ERREURS AVEC L'API
+    //////////////////////////////////////////////////////////////////////////// ERREURS AVEC L'API (idem dashboard)
     describe("When an error occurs on API", () => {
       beforeEach(() => {
-        jest.spyOn(mockStore, "bills")    // fonction simulée qui surveille les appels à mockStore (promesse)
+        jest.spyOn(mockStore, "bills")
         Object.defineProperty(
           window,
           'localStorage',
-          { value: localStorageMock }     // récupère les méthodes getItem, set, clear, remove
+          { value: localStorageMock }
         )
-        // window.localStorage.setItem('user', JSON.stringify({
-        //   type: 'Admin',
-        //   email: "a@a"
-        // }))
+        window.localStorage.setItem('user', JSON.stringify({
+          type: 'Employee'
+        }))
         const root = document.createElement("div")
         root.setAttribute("id", "root")
         document.body.appendChild(root)
         router()
       })
-      //////////////////////////////////////////////////////////////////////////// TEST ERREUR 404
+      //////////////////////////////////////////////////////////////////////////// TEST ERREUR 404 (idem dashboard)
       test("fetches bills from an API and fails with 404 message error", async () => {
-        mockStore.bills.mockImplementationOnce(() => {                      // simule une seule fois l'appel à mockStore.bills
+        mockStore.bills.mockImplementationOnce(() => {
           return {
             list: () => {
               return Promise.reject(new Error("Erreur 404"))
@@ -157,11 +157,11 @@ describe("Given I am connected as an employee", () => {
           }
         })
         window.onNavigate(ROUTES_PATH.Bills)
-        await new Promise(process.nextTick);            // quel intérêt de cumuler new Promise et process.nextTick ????????
+        await new Promise(process.nextTick);
         const message = await screen.getByText(/Erreur 404/)
         expect(message).toBeTruthy()
       })
-      //////////////////////////////////////////////////////////////////////////// TEST ERREUR 500
+      //////////////////////////////////////////////////////////////////////////// TEST ERREUR 500 (idem dashboard)
       test("fetches messages from an API and fails with 500 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {

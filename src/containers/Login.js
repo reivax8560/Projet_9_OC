@@ -51,11 +51,11 @@ export default class Login {
       status: "connected"
     }
     this.localStorage.setItem("user", JSON.stringify(user))
-    this.login(user)                                                      // retourne les infos de connexion
+    this.login(user)
       .catch(
         (err) => this.createUser(user)
       )
-      .then(() => {                                                     // affiche la dashboard admin
+      .then(() => {
         this.onNavigate(ROUTES_PATH['Dashboard'])
         this.PREVIOUS_LOCATION = ROUTES_PATH['Dashboard']
         PREVIOUS_LOCATION = this.PREVIOUS_LOCATION

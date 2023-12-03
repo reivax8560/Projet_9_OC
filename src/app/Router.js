@@ -11,7 +11,7 @@ import { ROUTES, ROUTES_PATH } from "../constants/routes.js"
 
 export default () => {
   const rootDiv = document.getElementById('root')
-  rootDiv.innerHTML = ROUTES({ pathname: window.location.pathname })    // retourne page UI demandée ("/" par défaut donc LoginUI)
+  rootDiv.innerHTML = ROUTES({ pathname: window.location.pathname })
 
   window.onNavigate = (pathname) => {
 
@@ -27,20 +27,20 @@ export default () => {
       new Login({ document, localStorage, onNavigate, PREVIOUS_LOCATION, store })
     }
 
-    else if (pathname === ROUTES_PATH['Bills']) {                                           // PAGE EMPLOYÉ
-      rootDiv.innerHTML = ROUTES({ pathname, loading: true })                               // exécute billsUI
+    else if (pathname === ROUTES_PATH['Bills']) {
+      rootDiv.innerHTML = ROUTES({ pathname, loading: true })
       const divIcon1 = document.getElementById('layout-icon1')
       const divIcon2 = document.getElementById('layout-icon2')
-      divIcon1.classList.add('active-icon')                                                 // icônes en surbrillance
+      divIcon1.classList.add('active-icon')
       divIcon2.classList.remove('active-icon')
-      const bills = new Bills({ document, onNavigate, store, localStorage })               // new Bills (containers/Bills)
+      const bills = new Bills({ document, onNavigate, store, localStorage })
       bills.getBills().then(data => {
-        rootDiv.innerHTML = BillsUI({ data })                                               // réexécute billsUI avec les datas
+        rootDiv.innerHTML = BillsUI({ data })
         const divIcon1 = document.getElementById('layout-icon1')
         const divIcon2 = document.getElementById('layout-icon2')
-        divIcon1.classList.add('active-icon')                                               // remet les icônes en surbrillance
+        divIcon1.classList.add('active-icon')
         divIcon2.classList.remove('active-icon')
-        new Bills({ document, onNavigate, store, localStorage })                            // réexécute new Bills (containers/dashboard)
+        new Bills({ document, onNavigate, store, localStorage })
       }).catch(error => {
         rootDiv.innerHTML = ROUTES({ pathname, error })
       })

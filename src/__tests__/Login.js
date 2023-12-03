@@ -7,7 +7,7 @@ import Login from "../containers/Login.js";
 import { ROUTES } from "../constants/routes";
 import { fireEvent, screen } from "@testing-library/dom";
 
-describe("Given that I am a user on login page", () => {                                  // sur la page de connexion
+describe("Given that I am a user on login page", () => {
   describe("When I do not fill fields and I click on employee button Login In", () => {   // quand je ne remplis pas les champs login/mdp
     test("Then It should renders Login page", () => {                                     // on doit rester sur la page de connexion
       document.body.innerHTML = LoginUI();

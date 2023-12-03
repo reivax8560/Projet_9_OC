@@ -8,10 +8,10 @@ export default class {
     this.onNavigate = onNavigate
     this.store = store
     const buttonNewBill = document.querySelector(`button[data-testid="btn-new-bill"]`)
-    if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)             // création new note au clic
+    if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
     const iconEye = document.querySelectorAll(`div[data-testid="icon-eye"]`)
     if (iconEye) iconEye.forEach(icon => {
-      icon.addEventListener('click', () => this.handleClickIconEye(icon))                           // affichage justif au clic
+      icon.addEventListener('click', () => this.handleClickIconEye(icon))
     })
     new Logout({ document, localStorage, onNavigate })
   }
@@ -38,7 +38,7 @@ export default class {
               try {
                 return {
                   ...doc,
-                  date_: doc.date,                                                                  // ajout
+                  // date_: doc.date,    
                   date: formatDate(doc.date),
                   status: formatStatus(doc.status)
                 }
@@ -53,9 +53,7 @@ export default class {
                 }
               }
             })
-
-          // bills.sort((a, b) => (a.date_ < b.date_ ? 1 : -1));                                        // ajout
-
+          // bills.sort((a, b) => (a.date_ < b.date_ ? 1 : -1));   
           return bills
         })
     }

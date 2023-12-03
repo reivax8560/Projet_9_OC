@@ -22,7 +22,7 @@ const row = (bill) => {
 
 const rows = (data) => {
   return (data && data.length) ? data
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .sort((a, b) => (a.date < b.date ? 1 : -1))                         // correction pour tri du + récent au plus ancien
     .map(bill => row(bill)).join("")
     : ""
 }

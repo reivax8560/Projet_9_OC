@@ -17,13 +17,13 @@ export default class NewBill {
   }
   handleChangeFile = e => {                                 // récupère name + type du fichier soumis et envoie en BDD (avec FormData)
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0] // récupère les prop du dernier justif téléchargé (name, type...)
-    const filePath = e.target.value.split(/\\/g)                    // récup le path du dernier justif et sépare chaque partie de l'url
-    const fileName = filePath[filePath.length - 1]                  // récup le nom du fichier téléchargé dans l'url complète
-    const formData = new FormData()                                 // FormData = méthode native permettant de récup les données du form (après soumission)
+    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+    const filePath = e.target.value.split(/\\/g)
+    const fileName = filePath[filePath.length - 1]
+    const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)                                   // ajoute l'objet file au FormData (name, type, size, sans le path)
-    formData.append('email', email)                                 // ajoute l'email du user au FormData
+    formData.append('file', file)
+    formData.append('email', email)
 
     this.store
       .bills()
